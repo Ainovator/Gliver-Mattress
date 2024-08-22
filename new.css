@@ -1,0 +1,83 @@
+.top {
+    border: 2px solid  #e0e0e0; /* Нижняя граница */
+    padding: 20px 0; /* Отступы сверху и снизу */
+    text-align: center; /* Выравнивание текста по центру */
+    background-color: #f8f9fa; /* Светлый фон для шапки */
+    margin-bottom: 20px; /* Отступ снизу от других элементов */
+    border-radius: 10px;
+}
+
+.checkbox-input{
+    transform: scale(2);
+}
+
+.double-img{
+    display: flex;
+}
+.half-img{
+    width: 50%;
+    height: auto;
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.card {
+    width: 48%;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.card-img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #e0e0e0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.card-body {
+  
+    text-align: center;
+}
+
+.card.selected {
+    box-shadow: 0 8px 16px red; /* Синяя тень вокруг выбранной карточки */
+    border-color: red; /* Синяя рамка вокруг выбранной карточки */
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Тень при наведении */
+}
+
+.card.disabled {
+    opacity: 0.7; /* Прозрачность самой карточки */
+    pointer-events: none;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.card.disabled::after {
+    content: "Только с отрезным бортом";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 80%;
+    box-sizing: border-box;
+    z-index: 10;
+    opacity: 1; /* Полная непрозрачность текста */
+}
+
+

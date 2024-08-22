@@ -1,0 +1,240 @@
+
+<!-- https://ainovator.github.io/Mattres/ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Матрасный калькулятор</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Подключение jQuery (перед toastr) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Подключение скрипта toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+
+    
+
+</head>
+<body>
+    <div class="container">
+        <h1>Калькулятор матрасов</h1>
+        <form id="calculator-form">
+            <div class="form-group">
+                <div class="switch-block">
+                     <div class="switch-container">
+                         <label>Кант</label>
+                         <div class="toggle-switch">
+                             <input type="checkbox" id="input-cant" class="toggle-switch-checkbox">
+                             <label for="input-cant" class="toggle-switch-label"></label>
+                         </div>
+                     </div>
+                     <div class="switch-container">
+                         <label>Борт</label>
+                         <div class="toggle-switch">
+                             <input type="checkbox" id="input-bort" class="toggle-switch-checkbox">
+                             <label for="input-bort" class="toggle-switch-label"></label>
+                         </div>
+                     </div>
+                     <div class="switch-container">
+                        <label for="zipper-select">Молния:</label>
+                        <select id="zipper-select" class="zipper" name="zipper">
+                            <option value="0" selected>Выбрать</option>
+                            <option value="bottom">На дне</option>
+                            <option value="side">На борту</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="cant-image-container" class="image-container">
+                <img id="cant-image" src="images/Main.jpg" alt="Кант изображение" class="cant-image">
+                
+                <h2>Размеры</h2>
+                <div class="form-group">
+                    <label for="input-width">Введите ширину матраса в миллиметрах:</label>
+                    <input type="number" id="input-mattress-width" min="0" class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
+                </div>
+                
+            <div class="form-group" >
+                <label for="input-length">Введите длину матраса в миллиметрах:</label>
+                <input type="number" id="input-mattress-length" min="0" class="form-control" required inputmode="numeric" pattern="^[0-9]*$"">
+            </div>
+            <div class="form-group">
+                <label for="input-amount">Введите количество одинаковых матрасов:</label>
+                <input type="number" id="input-mattress-amount" min ="0" class="form-control" value=1 required pattern="^[0-9]*$">
+            </div>     
+            <!-- <button type="button" onclick="addMattress()" class="btn-add" id="add-button" disabled>Добавить</button> -->
+            <!-- <h2>Список матрасов</h2>
+            <div id="mattress-list"></div> -->
+
+            <div class="form-group">
+                <label for="input-amount">Введите цену ткани:</label>
+                <input type="number" min="0" id="input-textile-cost" class="form-control" required pattern="^[0-9]*$">
+            </div>
+            <div class="form-group">
+                <label for="input-amount">Введите количество пуговиц:</label>
+                <input type="number" min="0" id="input-stud" class="form-control" required pattern="^[0-9]*$">
+            </div>
+
+            <h2>Слои пены</h2>
+            <div class="switch-container-2">
+                <label for="comfot-select">Комфортность</label>
+                <select id="comfort-select" class="form-control-2" name="zipper">
+                    <option value="0" selected>Выбрать</option>
+                    <option value="standart-50">Стандарт 50</option>
+                    <option value="standart-100">Стандарт 100</option>
+                    <option value="standart-150">Стандарт 150</option>
+                    <option value="comfort-50" disabled>Комфорт  50</option>
+                    <option value="comfort-100">Комфорт 100</option>
+                    <option value="comfort-150">Комфорт 150</option>
+                    <option value="premial-50">Премиум  50</option>
+                    <option value="premial-100">Премиум 100</option>
+                    <option value="premial-150">Премиум 150</option>
+
+
+                </select>
+            </div>
+            <!-- Первый слой пены -->
+            <div class="form-group-2" style = "margin-bottom: 25px;">
+                <div class = "label-select">
+                    <label for="material-select">Материал:</label>
+                    <select id="material-first-layer" class="form-control-2" name="material">
+                        <option value = 0 selected>Выбрать</option>
+                        <option value="ST2236">ST2236</option>
+                        <option value="ST3040">ST3040</option>
+                        <option value="EL4065">EL4065</option>
+                        <option value="HR3030">HR3030</option>
+                        <option value="HR3020">HR3020</option>
+                        <option value="HR3535">HR3535</option>
+                        <option value="VE3508">VE3508</option>
+                        <option value="LL5020">LL5020</option>
+                        <option value="NP2300">NP2300</option>
+                    </select>
+                </div>
+                <div class = "label-select">
+                    <label for="material-select">Толщина:</label>
+                    <select id="bold-first-layer" class="form-control-2" name="material">
+                        <option value="0" selected>0</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Второй слой пены -->
+            <div class="form-group-2" style = "margin-bottom: 25px;">
+                <div class = "label-select">
+                    <label for="material-select">Материал:</label>
+                    <select id="material-second-layer" class="form-control-2" name="material">
+                        <option value = 0 selected>Выбрать</option>
+                        <option value="ST2236">ST2236</option>
+                        <option value="ST3040">ST3040</option>
+                        <option value="EL4065">EL4065</option>
+                        <option value="HR3030">HR3030</option>
+                        <option value="HR3020">HR3020</option>
+                        <option value="HR3535">HR3535</option>
+                        <option value="VE3508">VE3508</option>
+                        <option value="LL5020">LL5020</option>
+                        <option value="NP2300">NP2300</option>
+                    </select>
+                </div>
+                <div class = "label-select">
+                    <label for="material-select">Толщина:</label>
+                    <select id="bold-second-layer" class="form-control-2" name="material">
+                        <option value="0" selected>0</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Третий слой пены -->
+            <div class="form-group-2" >
+                <div class = "label-select">
+                    <label for="material-select">Материал:</label>
+                    <select id="material-third-layer" class="form-control-2" name="material">
+                        <option value = 0 selected>Выбрать</option>
+                        <option value="ST2236">ST2236</option>
+                        <option value="ST3040">ST3040</option>
+                        <option value="EL4065">EL4065</option>
+                        <option value="HR3030">HR3030</option>
+                        <option value="HR3020">HR3020</option>
+                        <option value="HR3535">HR3535</option>
+                        <option value="VE3508">VE3508</option>
+                        <option value="LL5020">LL5020</option>
+                        <option value="NP2300">NP2300</option>
+                    </select>
+                </div>
+                <div class = "label-select">
+                    <label for="material-select">Толщина:</label>
+                    <select id="bold-third-layer" class="form-control-2" name="material">
+                        <option value="0" selected>0</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                    </select>   
+                </div>
+            </div>  
+            <div class="form-group">
+                <label for="input-bold" style="margin-top: 20px; display: block;">Толщина матраса:</label>
+                <input type="range" id="input-mattress-bold" class="slider" min="0" max="400" step="50" value="0" disabled>
+                <output id="input-mattress-bold-output">0</output>
+            </div>
+        </form>
+
+        
+        <h2>Работы</h2>
+        <div class="form-group" >
+            <label for="input-length">Введите время всех работ в минутах:</label>
+            <input type="number" id="input-full-work" min="0" class="form-control" required inputmode="numeric" pattern="[0-9]">
+            
+        </div>
+
+        <h2>Комментарии</h2>
+        <div class = "label-select">
+            <select id="purpose" class="form-control-2" style ="margin-bottom: 20px; "name="material">
+                <option value="0" selected>Предназначение</option>
+                <option value="1">На кровать</option>
+                <option value="2">На подоконник</option>
+                <option value="3">На пуфик</option>
+                <option value="4">Другое</option>
+            </select>   
+        </div>
+        <div class="form-group">
+            <label for="input-field">Комментарий к изделию</label>
+            <textarea id="input-field" placeholder="Комментарий к изделию"></textarea>
+        </div>
+        <h2>Результаты</h2>
+        <div id="results">
+            <p id="textile-length"></p>
+            <p id="full-textile-cost"></p>
+            <p id="cost-foam"></p>
+            <p id="cost-work"></p>
+            <p id="full-cost-mattress" ></p>
+
+        </div>
+        <!-- <div class="form-group">
+            <label for="markup-range">Наценка:</label>
+            <input type="range" id="markup-range" class="slider" min="30" max="75" step="5" value="30">
+            <output id="markup-output">30</output>%
+        </div> -->
+      
+        
+        <div id="visualization">
+        <button type="button" onclick="visualize()" class="btn" id="visualize-button" disabled>Визуализировать</button>
+            <h2>Визуализация</h2>
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
