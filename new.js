@@ -90,10 +90,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const boldFirstLayer = document.getElementById("bold-first-layer");
         if (materialFirstLayer && boldFirstLayer) {
             materialFirstLayer.value = mt_1;
+            console.log(materialFirstLayer)
+
             const Material_First_Layer = parseInt(materialFirstLayer.options[materialFirstLayer.selectedIndex].text.trim().slice(2, 4)) || 0;
-            const Cost_First_Layer = Cost_Foam[materialFirstLayer.options[materialFirstLayer.selectedIndex].text.trim()] || 0;
+            console.log(Material_First_Layer)
             boldFirstLayer.value = bd_1;
+
             const Bold_First_Layer = parseInt(boldFirstLayer.value) || 0;
+            console.log(Bold_First_Layer)
+
         }
 
         // Второй слой
@@ -102,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (materialSecondLayer && boldSecondLayer) {
             materialSecondLayer.value = mt_2;
             const Material_Second_Layer = parseInt(materialSecondLayer.options[materialSecondLayer.selectedIndex].text.trim().slice(2, 4)) || 0;
-            const Cost_Second_Layer = Cost_Foam[materialSecondLayer.options[materialSecondLayer.selectedIndex].text.trim()] || 0;
             boldSecondLayer.value = bd_2;
             const Bold_Second_Layer = parseInt(boldSecondLayer.value) || 0;
         }
@@ -113,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (materialThirdLayer && boldThirdLayer) {
             materialThirdLayer.value = mt_3;
             const Material_Third_Layer = parseInt(materialThirdLayer.options[materialThirdLayer.selectedIndex].text.trim().slice(2, 4)) || 0;
-            const Cost_Third_Layer = Cost_Foam[materialThirdLayer.options[materialThirdLayer.selectedIndex].text.trim()] || 0;
             boldThirdLayer.value = bd_3;
             const Bold_Third_Layer = parseInt(boldThirdLayer.value) || 0;
         }
@@ -161,7 +164,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 updateLayers(0, 0, 0, 0 ,0 ,0);
                 break;
         }
-        updateMattressBold();
-        calculate();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        const slides = document.querySelectorAll('.mySlides');
+        slides.forEach(slide => {
+            slide.style.display = 'none';
+        });
+
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        setTimeout(showSlides, 2000); // Меняйте картинку каждые 2 секунды
     }
 });
