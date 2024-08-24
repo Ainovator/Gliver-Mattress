@@ -2,17 +2,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const cards = document.querySelectorAll('.selectable-card');
     let selectedBort = null; // Переменная для хранения выбранного типа борта
 
+    // Автоматически выбираем "Цельный крой" при загрузке страницы
+    handleBortSelection('card-no-bort');
+
     cards.forEach(card => {
         card.addEventListener('click', function () {
             const cardId = this.id;
 
-            if (cardId === 'card-no-bort' || cardId === 'card-with-bort') {
+            // Проверяем, относится ли карточка к декорациям
+            if (cardId === 'card-with-pug' || cardId === 'card-no-pug') {
+                handleDecorationSelection(cardId);
+            } 
+            // Остальные карточки обрабатываются по другой логике
+            else if (cardId === 'card-no-bort' || cardId === 'card-with-bort') {
                 handleBortSelection(cardId);
             } else if (selectedBort === 'card-with-bort') {
                 handleOptionSelection(cardId);
             }
         });
     });
+    
+    // Функции handleBortSelection, handleDecorationSelection и другие...
+
 
     function handleBortSelection(cardId) {
         selectedBort = cardId;
@@ -30,6 +41,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function handleDecorationSelection(cardId) {
+        const card = document.getElementById(cardId);
+    
+        // Если карточка уже выделена, снимаем выделение
+        if (card.classList.contains('selected')) {
+            card.classList.remove('selected');
+        } else {
+            card.classList.add('selected');
+        }
+    }
+    
     function handleOptionSelection(cardId) {
         if (cardId.includes('cant')) {
             clearSelection(['#card-no-cant', '#card-with-cant']);
