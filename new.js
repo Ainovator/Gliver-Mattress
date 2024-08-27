@@ -1,211 +1,265 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const cards = document.querySelectorAll('.selectable-card');
-    let selectedBort = null; // Переменная для хранения выбранного типа борта
+    // Переменные для карточек и элементов
+    const cardNoBort = document.getElementById('card-no-bort');
+    const cardWithBort = document.getElementById('card-with-bort');
+    const cardZipperSide = document.getElementById('card-zipper-side');
+    const cardZipperBottom = document.getElementById('card-zipper-bottom');
+    const cardNoCant = document.getElementById('card-no-cant');
+    const cardWithCant = document.getElementById('card-with-cant');
+    const cardUnoStitch = document.getElementById('card-uno-stitch');
+    const cardDoubleStitch = document.getElementById('card-double-stitch');
+    const cardWithPug = document.getElementById('card-with-pug');
+    const sidePanel = document.getElementById('side-panel');
+    const lengthStepSlider = document.getElementById('length-step-slider');
+    const widthStepSlider = document.getElementById('width-step-slider');
+    const lengthStepValue = document.getElementById('length-step-value');
+    const widthStepValue = document.getElementById('width-step-value');
+    const canvas = document.getElementById('mattress-canvas');
+    const ctx = canvas.getContext('2d');
+    const mattressWidthInput = document.getElementById('input-mattress-width');
+    const mattressLengthInput = document.getElementById('input-mattress-length');
+    const formCards = document.querySelectorAll('.form-card-container .form-card'); // Выбираем все карточки в блоке "Форма"
+    // Функции для работы с карточками
 
-    // Автоматически выбираем "Цельный крой" при загрузке страницы
-    handleBortSelection('card-no-bort');
-
-    cards.forEach(card => {
-        card.addEventListener('click', function () {
-            const cardId = this.id;
-
-            // Проверяем, относится ли карточка к декорациям
-            if (cardId === 'card-with-pug' || cardId === 'card-no-pug') {
-                handleDecorationSelection(cardId);
-            } 
-            // Остальные карточки обрабатываются по другой логике
-            else if (cardId === 'card-no-bort' || cardId === 'card-with-bort') {
-                handleBortSelection(cardId);
-            } else if (selectedBort === 'card-with-bort') {
-                handleOptionSelection(cardId);
-            }
-        });
-    });
-    
-    // Функции handleBortSelection, handleDecorationSelection и другие...
-
-
-    function handleBortSelection(cardId) {
-        selectedBort = cardId;
-
-        // Снимаем выделение с карточек борта
-        clearSelection(['#card-no-bort', '#card-with-bort']);
-        document.getElementById(cardId).classList.add('selected');
-
-        // Блокируем или разблокируем карточки в зависимости от выбора борта
-        toggleCardAccessibility(selectedBort === 'card-no-bort');
-
-        // Если выбран цельнокройный борт, автоматически выбираем "На дне" и "Без канта"
-        if (selectedBort === 'card-no-bort') {
-            autoSelectOptions(['#card-zipper-bottom', '#card-with-cant']);
-        }
-    }
-
-    function handleDecorationSelection(cardId) {
-        const card = document.getElementById(cardId);
-    
-        // Если карточка уже выделена, снимаем выделение
-        if (card.classList.contains('selected')) {
+    function disableCard(card, disable = true) {
+        if (disable) {
+            card.classList.add('disabled');
             card.classList.remove('selected');
         } else {
-            card.classList.add('selected');
+            card.classList.remove('disabled');
         }
     }
-    
-    function handleOptionSelection(cardId) {
-        if (cardId.includes('cant')) {
-            clearSelection(['#card-no-cant', '#card-with-cant']);
-        } else if (cardId.includes('zipper')) {
-            clearSelection(['#card-zipper-side', '#card-zipper-bottom']);
+
+    function selectCard(selectedCard, otherCard) {
+        selectedCard.classList.add('selected');
+        otherCard.classList.remove('selected');
+
+        if (selectedCard === cardNoBort) { // Если выбран "Цельный крой"
+            disableCard(cardZipperSide, true);
+            disableCard(cardNoCant, true);
+
+            // Автоматически выбираем "Молния на дне" и "Без канта"
+            cardZipperBottom.classList.add('selected');
+            cardWithCant.classList.add('selected');
+        } else if (selectedCard === cardWithBort) { // Если выбран "Модульный крой"
+            disableCard(cardZipperSide, false);
+            disableCard(cardNoCant, false);
+
+            // Снимаем выбор с "Молния на дне" и "Без канта"
+            cardZipperBottom.classList.remove('selected');
+            cardWithCant.classList.remove('selected');
         }
-        document.getElementById(cardId).classList.add('selected');
     }
 
-    function clearSelection(selectors) {
-        selectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(card => card.classList.remove('selected'));
-        });
+    // Обработка выбора кроя
+
+    cardNoBort.addEventListener('click', function () {
+        selectCard(cardNoBort, cardWithBort);
+    });
+
+    cardWithBort.addEventListener('click', function () {
+        selectCard(cardWithBort, cardNoBort);
+    });
+
+    // Обработка выбора "С кантом" или "Без канта"
+
+    cardNoCant.addEventListener('click', function () {
+        if (!cardNoCant.classList.contains('disabled')) {
+            cardNoCant.classList.add('selected');
+            cardWithCant.classList.remove('selected');
+        }
+    });
+
+    cardWithCant.addEventListener('click', function () {
+        if (!cardWithCant.classList.contains('disabled')) {
+            cardWithCant.classList.add('selected');
+            cardNoCant.classList.remove('selected');
+        }
+    });
+
+    // Обработка выбора "Молния на борту" или "Молния на дне"
+
+    cardZipperSide.addEventListener('click', function () {
+        if (!cardZipperSide.classList.contains('disabled')) {
+            cardZipperSide.classList.add('selected');
+            cardZipperBottom.classList.remove('selected');
+        }
+    });
+
+    cardZipperBottom.addEventListener('click', function () {
+        if (!cardZipperBottom.classList.contains('disabled')) {
+            cardZipperBottom.classList.add('selected');
+            cardZipperSide.classList.remove('selected');
+        }
+    });
+
+    // Обработка выбора "Стёжка одинарная" или "Стёжка двойная"
+
+    cardUnoStitch.addEventListener('click', function () {
+        if (cardUnoStitch.classList.contains('selected')) {
+            cardUnoStitch.classList.remove('selected');
+        } else {
+            cardUnoStitch.classList.add('selected');
+            cardDoubleStitch.classList.remove('selected');
+            disableCard(cardWithPug, false); // Разблокируем карточку "Пуговицы"
+        }
+        drawMattress();
+    });
+
+    cardDoubleStitch.addEventListener('click', function () {
+        if (cardDoubleStitch.classList.contains('selected')) {
+            
+            cardDoubleStitch.classList.remove('selected');
+            disableCard(cardWithPug, false); // Разблокируем карточку "Пуговицы"
+           
+        } else {
+            
+            cardDoubleStitch.classList.add('selected');
+            cardUnoStitch.classList.remove('selected');
+            disableCard(cardWithPug, true); // Деактивируем карточку "Пуговицы"
+            sidePanel.style.display = 'none'; // Скрываем side-panel
+           
+        }
+        
+    });
+
+    // Открытие side-panel и рисование матраса
+
+    cardWithPug.addEventListener('click', function () {
+        const isSelected = cardWithPug.classList.toggle('selected');
+
+        if (isSelected) {
+            sidePanel.style.display = 'flex';
+            drawMattress(); // Первое рисование матраса при открытии панели
+        } else {
+            sidePanel.style.display = 'none';
+        }
+    });
+
+    // Обновление значений и перерисовка матраса при изменении шагов
+
+    lengthStepSlider.addEventListener('input', function () {
+        lengthStepValue.textContent = lengthStepSlider.value;
+        drawMattress(); // Перерисовка матраса при изменении шага по длине
+    });
+
+    widthStepSlider.addEventListener('input', function () {
+        widthStepValue.textContent = widthStepSlider.value;
+        drawMattress(); // Перерисовка матраса при изменении шага по ширине
+    });
+
+    // Функция рисования пуговиц
+
+    function drawFilledCircle(x, y, radius) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 
-    function autoSelectOptions(selectors) {
-        selectors.forEach(selector => {
-            document.querySelector(selector).classList.add('selected');
-        });
+    // Функция рисования пунктирных линий
+    function drawDashedLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]); // Настраиваем пунктир
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.setLineDash([]); // Сбрасываем пунктирный стиль
     }
 
-    function toggleCardAccessibility(disable) {
-        const cantCards = document.querySelectorAll('#card-no-cant, #card-with-cant');
-        const zipperCards = document.querySelectorAll('#card-zipper-side, #card-zipper-bottom');
+    // Функция рисования матраса с пуговицами и стёжкой
 
-        // Блокируем только "На борту" и "С кантом" при цельнокройном борте
-        cantCards.forEach(card => {
-            if (disable && card.id === 'card-no-cant') {
-                card.classList.remove('selected'); // Снять выделение с карточки "С кантом"
-                card.classList.add('disabled'); // Заблокировать карточку "С кантом"
-            } else {
-                card.classList.remove('disabled'); // Разблокировать "Без канта"
+    function drawMattress() {
+        const width = parseInt(mattressWidthInput.value, 10) || 0;
+        const length = parseInt(mattressLengthInput.value, 10) || 0;
+
+        // Преобразуем шаги из сантиметров в миллиметры
+        const lengthStep = parseInt(lengthStepSlider.value, 10) * 10 || 150;
+        const widthStep = parseInt(widthStepSlider.value, 10) * 10 || 150;
+
+        // Очищаем canvas перед рисованием
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Определяем масштаб для отображения на canvas
+        const scale = Math.min(canvas.height / width, canvas.width / length);
+
+        // Рисуем прямоугольник матраса с поворотом на 90 градусов
+        const scaledWidth = length * scale;
+        const scaledLength = width * scale;
+
+        // Устанавливаем стили для обводки
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+
+        // Рисуем обводку прямоугольника, без заливки
+        ctx.strokeRect(
+            (canvas.width - scaledWidth) / 2,  // X-координата верхнего левого угла
+            (canvas.height - scaledLength) / 2, // Y-координата верхнего левого угла
+            scaledWidth,  // Ширина прямоугольника (раньше была длина)
+            scaledLength  // Длина прямоугольника (раньше была ширина)
+        );
+
+        // Рассчитываем количество пуговиц
+        const numButtonsLength = Math.floor(width / widthStep);
+        const numButtonsWidth = Math.floor(length / lengthStep);
+
+        const buttonSpacingLength = scaledLength / (numButtonsLength + 1);
+        const buttonSpacingWidth = scaledWidth / (numButtonsWidth + 1);
+
+        // Рисуем пуговицы в виде закрашенных кружков
+        const buttonPositions = [];
+        for (let i = 1; i <= numButtonsLength; i++) {
+            for (let j = 1; j <= numButtonsWidth; j++) {
+                const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
+                const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
+                drawFilledCircle(x, y, 5); // Рисуем закрашенный круг с радиусом 5
+                buttonPositions.push({ x, y });
             }
-        });
+        }
 
-        zipperCards.forEach(card => {
-            if (disable && card.id === 'card-zipper-side') {
-                card.classList.remove('selected'); // Снять выделение с карточки "На борту"
-                card.classList.add('disabled'); // Заблокировать карточку "На борту"
-            } else {
-                card.classList.remove('disabled'); // Разблокировать "На дне"
+        // Если выбрана стёжка, рисуем пунктирные линии
+        if (cardUnoStitch.classList.contains('selected') || cardDoubleStitch.classList.contains('selected')) {
+            // Рисуем горизонтальные линии
+            for (let i = 0; i < numButtonsLength; i++) {
+                const startY = buttonPositions[i * numButtonsWidth].y;
+                const startX = (canvas.width - scaledWidth) / 2; // Линия начинается от края прямоугольника
+                const endX = (canvas.width + scaledWidth) / 2; // Линия заканчивается на противоположном краю
+                drawDashedLine(startX, startY, endX, startY);
             }
+
+            // Рисуем вертикальные линии
+            for (let j = 0; j < numButtonsWidth; j++) {
+                const startX = buttonPositions[j].x;
+                const startY = (canvas.height - scaledLength) / 2; // Линия начинается от края прямоугольника
+                const endY = (canvas.height + scaledLength) / 2; // Линия заканчивается на противоположном краю
+                drawDashedLine(startX, startY, startX, endY);
+            }
+        }
+    }
+
+    // Функция, которая снимает выделение со всех карточек и выделяет только выбранную
+    function selectFormCard(selectedCard) {
+        formCards.forEach(card => {
+            card.classList.remove('selected'); // Снимаем выделение со всех карточек
         });
+        selectedCard.classList.add('selected'); // Выделяем только выбранную карточку
     }
 
-    // Динамическое отслеживание комфортности
-    const comfortSelectElement = document.getElementById('comfort-select');
-    if (comfortSelectElement) {
-        comfortSelectElement.addEventListener('input', () => {
-            const comfortSelect = comfortSelectElement.value || 0;
-            updateLayersSelect(comfortSelect);
+    // Добавляем обработчики событий ко всем карточкам
+    formCards.forEach(card => {
+        card.addEventListener('click', function () {
+            selectFormCard(card); // Вызываем функцию при клике на карточку
         });
-    }
+    });
 
-    function updateLayers(mt_1, bd_1, mt_2, bd_2, mt_3, bd_3) {
-        // Первый слой
-        const materialFirstLayer = document.getElementById("material-first-layer");
-        const boldFirstLayer = document.getElementById("bold-first-layer");
-        if (materialFirstLayer && boldFirstLayer) {
-            materialFirstLayer.value = mt_1;
-            console.log(materialFirstLayer)
-
-            const Material_First_Layer = parseInt(materialFirstLayer.options[materialFirstLayer.selectedIndex].text.trim().slice(2, 4)) || 0;
-            console.log(Material_First_Layer)
-            boldFirstLayer.value = bd_1;
-
-            const Bold_First_Layer = parseInt(boldFirstLayer.value) || 0;
-            console.log(Bold_First_Layer)
-
-        }
-
-        // Второй слой
-        const materialSecondLayer = document.getElementById("material-second-layer");
-        const boldSecondLayer = document.getElementById("bold-second-layer");
-        if (materialSecondLayer && boldSecondLayer) {
-            materialSecondLayer.value = mt_2;
-            const Material_Second_Layer = parseInt(materialSecondLayer.options[materialSecondLayer.selectedIndex].text.trim().slice(2, 4)) || 0;
-            boldSecondLayer.value = bd_2;
-            const Bold_Second_Layer = parseInt(boldSecondLayer.value) || 0;
-        }
-
-        // Третий слой
-        const materialThirdLayer = document.getElementById("material-third-layer");
-        const boldThirdLayer = document.getElementById("bold-third-layer");
-        if (materialThirdLayer && boldThirdLayer) {
-            materialThirdLayer.value = mt_3;
-            const Material_Third_Layer = parseInt(materialThirdLayer.options[materialThirdLayer.selectedIndex].text.trim().slice(2, 4)) || 0;
-            boldThirdLayer.value = bd_3;
-            const Bold_Third_Layer = parseInt(boldThirdLayer.value) || 0;
-        }
-    }
-
-    function updateLayersSelect(comfortSelect) {
-        switch (comfortSelect) {
-            case "standart-50":
-                updateLayers("ST3040", "50", 0, 0 ,0 ,0);
-                break;
-
-            case "standart-100":
-                updateLayers("ST3040", "100", 0, 0 ,0 ,0);
-                break;
-
-            case "standart-150":
-                updateLayers("ST3040", "50", "ST2236", "100", 0, 0);
-                break;
-
-            case "comfort-50":
-                updateLayers(0, 0, 0, 0, 0, 0);
-                break;
-
-            case "comfort-100":
-                updateLayers("HR3030", "50", "EL4065", "50", 0, 0);
-                break;
-
-            case "comfort-150":
-                updateLayers("HR3030", "100", "EL4065", "50", 0, 0);
-                break;
-
-            case "premial-50":
-                updateLayers("HR3535", "50", 0, 0, 0, 0);
-                break;
-
-            case "premial-100":
-                updateLayers("LL5020", "50", "HR3535", "50", 0, 0);
-                break;
-
-            case "premial-150":
-                updateLayers("VE3508", "50", "HR3535", "100", 0, 0);
-                break;
-
-            default:
-                updateLayers(0, 0, 0, 0 ,0 ,0);
-                break;
-        }
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    let slideIndex = 0;
-    showSlides();
-
-    function showSlides() {
-        const slides = document.querySelectorAll('.mySlides');
-        slides.forEach(slide => {
-            slide.style.display = 'none';
-        });
-
-        slideIndex++;
-        if (slideIndex > slides.length) {
-            slideIndex = 1;
-        }
-
-        slides[slideIndex - 1].style.display = 'block';
-
-        setTimeout(showSlides, 2000); // Меняйте картинку каждые 2 секунды
-    }
+    // Выбираем по умолчанию карточку "Без выреза"
+    const defaultCard = document.getElementById('card-no-cut');
+    selectFormCard(defaultCard);
+    // Автоматический выбор "Цельный крой" при загрузке страницы
+    selectCard(cardNoBort, cardWithBort);
 });

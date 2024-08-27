@@ -1,0 +1,61 @@
+.form-card-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+    gap: 5px;
+}
+
+.form-card {
+    width: 50%; /* Карточка и панель будут иметь одинаковую ширину */
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+    padding: 5px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.form-card.disabled::before {
+    content: "только с модульным кроем"; /* Текст, который будет отображаться */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: grey;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: wheat;
+    font-size: 14px;
+    z-index: 10;
+    text-align: center;
+    white-space: nowrap; /* Предотвращаем перенос текста */
+}
+
+.form-card.disabled {
+    pointer-events: none; /* Отключаем возможность клика */
+    opacity: 0.8; /* Уменьшаем непрозрачность */
+}
+
+.form-card-img{
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #e0e0e0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.form-card-body {
+    text-align: center;
+}
+
+.form-card.selected {
+    
+    box-shadow: none;
+}
+
+/* .form-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+} */
