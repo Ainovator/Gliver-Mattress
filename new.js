@@ -95,34 +95,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработка выбора "Стёжка одинарная" или "Стёжка двойная"
 
-    cardUnoStitch.addEventListener('click', function () {
-        if (cardUnoStitch.classList.contains('selected')) {
-            cardUnoStitch.classList.remove('selected');
-        } else {
-            cardUnoStitch.classList.add('selected');
-            cardDoubleStitch.classList.remove('selected');
-            disableCard(cardWithPug, false); // Разблокируем карточку "Пуговицы"
-        }
-        drawMattress();
-    });
+   // Обработка выбора "Стёжка одинарная" или "Стёжка двойная"
+   cardUnoStitch.addEventListener('click', function () {
+    if (cardUnoStitch.classList.contains('selected')) {
+        cardUnoStitch.classList.remove('selected');
+    } else {
+        cardUnoStitch.classList.add('selected');
+        cardDoubleStitch.classList.remove('selected');
+        disableCard(cardWithPug, false); // Разблокируем карточку "Пуговицы", если была выбрана двойная стёжка
+    }
+    drawMattress(); // Перерисовка матраса при активации или деактивации "Одинарная стёжка"
+});
 
-    cardDoubleStitch.addEventListener('click', function () {
-        if (cardDoubleStitch.classList.contains('selected')) {
-            
-            cardDoubleStitch.classList.remove('selected');
-            disableCard(cardWithPug, false); // Разблокируем карточку "Пуговицы"
-           
-        } else {
-            
-            cardDoubleStitch.classList.add('selected');
-            cardUnoStitch.classList.remove('selected');
-            disableCard(cardWithPug, true); // Деактивируем карточку "Пуговицы"
-            sidePanel.style.display = 'none'; // Скрываем side-panel
-           
-        }
-        
-    });
-
+cardDoubleStitch.addEventListener('click', function () {
+    if (cardDoubleStitch.classList.contains('selected')) {
+        cardDoubleStitch.classList.remove('selected');
+        disableCard(cardWithPug, false); // Разблокируем карточку "Пуговицы"
+    } else {
+        cardDoubleStitch.classList.add('selected');
+        cardUnoStitch.classList.remove('selected');
+        disableCard(cardWithPug, true); // Деактивируем карточку "Пуговицы", но не скрываем side-panel
+    }
+    drawMattress(); // Перерисовка матраса при активации "Двойная стёжка"
+});
     // Открытие side-panel и рисование матраса
 
     cardWithPug.addEventListener('click', function () {
@@ -262,4 +257,90 @@ document.addEventListener('DOMContentLoaded', function () {
     selectFormCard(defaultCard);
     // Автоматический выбор "Цельный крой" при загрузке страницы
     selectCard(cardNoBort, cardWithBort);
+
+    //Динамическое отслеживание комфортности
+    document.getElementById('comfort-select').addEventListener('input', () => {
+        ComfortSelect = document.getElementById('comfort-select').value || 0;
+        UpdateLayersSelect()
+        updateMattressBold()
+        
+    });
+    // Шаблон обновления слоёв
+    function updateLayers(mt_1, bd_1, mt_2, bd_2, mt_3, bd_3) {
+        // Первый слой
+        document.getElementById("material-first-layer").value = mt_1;
+        Material_First_Layer = parseInt(document.querySelector('#material-first-layer option:checked').textContent.trim().slice(2, 4)) || 0;
+        document.getElementById("bold-first-layer").value = bd_1;
+        Bold_First_Layer = parseInt(document.getElementById('bold-first-layer').value) || 0;
+
+        // Второй слой
+        document.getElementById("material-second-layer").value = mt_2;
+        Material_Second_Layer = parseInt(document.querySelector('#material-second-layer option:checked').textContent.trim().slice(2, 4)) || 0;
+        document.getElementById("bold-second-layer").value = bd_2;
+        Bold_Second_Layer = parseInt(document.getElementById('bold-second-layer').value) || 0;
+
+        // Третий слой
+        document.getElementById("material-third-layer").value = mt_3;
+        Material_Third_Layer = parseInt(document.querySelector('#material-third-layer option:checked').textContent.trim().slice(2, 4)) || 0;
+        document.getElementById("bold-third-layer").value = bd_3;
+        Bold_Third_Layer = parseInt(document.getElementById('bold-third-layer').value) || 0;
+    }
+
+    //Обновление толщины матраса
+    function updateMattressBold() {
+        // Считаем сумму толщин слоёв пены
+        let totalBold = Bold_First_Layer + Bold_Second_Layer + Bold_Third_Layer;
+
+        // Устанавливаем значение ползунка и текстового вывода
+        Input_Mattress_Bold = totalBold;
+        document.getElementById('input-mattress-bold').value = Input_Mattress_Bold;
+        document.getElementById('input-mattress-bold-output').textContent = Input_Mattress_Bold;
+
+    }
+
+    //Обновление слоёв от комфортности
+    function UpdateLayersSelect() {
+        switch (ComfortSelect) {
+            case "standart-50":
+                updateLayers("ST3040", "50", 0, 0 ,0 ,0);
+                break;
+
+            case "standart-100":
+                updateLayers("ST3040", "100", 0, 0 ,0 ,0);
+                break;
+
+            case "standart-150":
+                updateLayers("ST3040", "50", "ST2236", 100 ,0 ,0);
+                break;
+
+            case "comfort-50":
+                updateLayers(0, 0, 0, 0, 0, 0);
+                break;
+
+            case "comfort-100":
+                updateLayers("HR3030", "50", "EL4065", "50", 0, 0);
+                break;
+
+            case "comfort-150":
+                updateLayers("HR3030", "100", "EL4065", "50", 0, 0);
+                break;
+
+            case "premial-50":
+                updateLayers("HR3535", "50", 0, 0, 0, 0);
+                break;
+
+            case "premial-100":
+                updateLayers("LL5020", "50", "HR3535", "50", 0, 0);
+                break;
+
+            case "premial-150":
+                updateLayers("VE3508", "50", "HR3535", "100", 0, 0);
+                break;
+
+            default:
+                updateLayers(0, 0, 0, 0 ,0 ,0);
+                break;
+        }
+        updateMattressBold();
+    }
 });

@@ -26,6 +26,24 @@
             <h1>Внешний вид</h1>
         </div>
         
+        <h2>Размеры</h2>
+        <div class="form-group">
+            <label for="input-mattress-width">Введите ширину матраса в миллиметрах:</label>
+            <input type="number" id="input-mattress-width" min="0" value = 600 class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
+        </div>
+        <div class="form-group">
+            <label for="input-mattress-length">Введите длину матраса в миллиметрах:</label>
+            <input type="number" id="input-mattress-length" min="0" value = 1500 class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
+        </div>
+        <div class="form-group">
+            <label for="input-mattress-amount">Введите количество одинаковых матрасов:</label>
+            <input type="number" id="input-mattress-amount" min="0" class="form-control" value="1" required pattern="^[0-9]*$">
+        </div>
+        <div class="form-group">
+            <label for="input-textile-cost">Введите цену ткани:</label>
+            <input type="number" min="0" id="input-textile-cost" class="form-control" required pattern="^[0-9]*$">
+        </div>
+
         <h2>Крой</h2>
         <div class="card-container">
             <div class="card selectable-card" id="card-no-bort">
@@ -137,23 +155,7 @@
         </div>
         
 
-        <h2>Размеры</h2>
-        <div class="form-group">
-            <label for="input-mattress-width">Введите ширину матраса в миллиметрах:</label>
-            <input type="number" id="input-mattress-width" min="0" value = 600 class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
-        </div>
-        <div class="form-group">
-            <label for="input-mattress-length">Введите длину матраса в миллиметрах:</label>
-            <input type="number" id="input-mattress-length" min="0" value = 1500 class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
-        </div>
-        <div class="form-group">
-            <label for="input-mattress-amount">Введите количество одинаковых матрасов:</label>
-            <input type="number" id="input-mattress-amount" min="0" class="form-control" value="1" required pattern="^[0-9]*$">
-        </div>
-        <div class="form-group">
-            <label for="input-textile-cost">Введите цену ткани:</label>
-            <input type="number" min="0" id="input-textile-cost" class="form-control" required pattern="^[0-9]*$">
-        </div>
+   
 
         <h2>Форма</h2>
         <div class="form-card-container" style = "margin-bottom: 20px;">
@@ -227,6 +229,116 @@
             
         </div>
    
+        <h2>Слои пены</h2>
+        <!-- Выбор комфортности -->
+        <div class="switch-container-2">
+            <label for="comfot-select">Комфортность</label>
+            <select id="comfort-select" class="form-control-2" name="zipper">
+                <option value="0" selected>Выбрать</option>
+                <option value="standart-50">Стандарт 50</option>
+                <option value="standart-100">Стандарт 100</option>
+                <option value="standart-150">Стандарт 150</option>
+                <option value="comfort-50" disabled>Комфорт  50</option>
+                <option value="comfort-100">Комфорт 100</option>
+                <option value="comfort-150">Комфорт 150</option>
+                <option value="premial-50">Премиум  50</option>
+                <option value="premial-100">Премиум 100</option>
+                <option value="premial-150">Премиум 150</option>
+
+
+            </select>
+        </div>
+        <!-- Первый слой пены -->
+        <div class="form-group-2" style = "margin-bottom: 25px;">
+            <div class = "label-select">
+                <label for="material-select">Материал:</label>
+                <select id="material-first-layer" class="form-control-2" name="material">
+                    <option value = 0 selected>Выбрать</option>
+                    <option value="ST2236">ST2236</option>
+                    <option value="ST3040">ST3040</option>
+                    <option value="EL4065">EL4065</option>
+                    <option value="HR3030">HR3030</option>
+                    <option value="HR3020">HR3020</option>
+                    <option value="HR3535">HR3535</option>
+                    <option value="VE3508">VE3508</option>
+                    <option value="LL5020">LL5020</option>
+                    <option value="NP2300">NP2300</option>
+                </select>
+            </div>
+            <div class = "label-select">
+                <label for="material-select">Толщина:</label>
+                <select id="bold-first-layer" class="form-control-2" name="material">
+                    <option value="0" selected>0</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+        </div>
+        <!-- Второй слой пены -->
+        <div class="form-group-2" style = "margin-bottom: 25px;">
+            <div class = "label-select">
+                <label for="material-select">Материал:</label>
+                <select id="material-second-layer" class="form-control-2" name="material">
+                    <option value = 0 selected>Выбрать</option>
+                    <option value="ST2236">ST2236</option>
+                    <option value="ST3040">ST3040</option>
+                    <option value="EL4065">EL4065</option>
+                    <option value="HR3030">HR3030</option>
+                    <option value="HR3020">HR3020</option>
+                    <option value="HR3535">HR3535</option>
+                    <option value="VE3508">VE3508</option>
+                    <option value="LL5020">LL5020</option>
+                    <option value="NP2300">NP2300</option>
+                </select>
+            </div>
+            <div class = "label-select">
+                <label for="material-select">Толщина:</label>
+                <select id="bold-second-layer" class="form-control-2" name="material">
+                    <option value="0" selected>0</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+        </div>
+        <!-- Третий слой пены -->
+        <div class="form-group-2" >
+            <div class = "label-select">
+                <label for="material-select">Материал:</label>
+                <select id="material-third-layer" class="form-control-2" name="material">
+                    <option value = 0 selected>Выбрать</option>
+                    <option value="ST2236">ST2236</option>
+                    <option value="ST3040">ST3040</option>
+                    <option value="EL4065">EL4065</option>
+                    <option value="HR3030">HR3030</option>
+                    <option value="HR3020">HR3020</option>
+                    <option value="HR3535">HR3535</option>
+                    <option value="VE3508">VE3508</option>
+                    <option value="LL5020">LL5020</option>
+                    <option value="NP2300">NP2300</option>
+                </select>
+            </div>
+            <div class = "label-select">
+                <label for="material-select">Толщина:</label>
+                <select id="bold-third-layer" class="form-control-2" name="material">
+                    <option value="0" selected>0</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                    <option value="200">200</option>
+                </select>   
+            </div>
+        </div>  
+        <!-- Итоговая толщина матраса -->
+        <div class="form-group">
+            <label for="input-bold" style="margin-top: 20px; display: block;">Толщина матраса:</label>
+            <input type="range" id="input-mattress-bold" class="slider" min="0" max="400" step="50" value="0" disabled>
+            <output id="input-mattress-bold-output">0</output>
+        </div>
+        
         <div class = "end-group">
             <button class = "btn">Расчёт</button>
         </div>

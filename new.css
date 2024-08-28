@@ -114,7 +114,7 @@ h1 {
 #mattress-canvas {
     height: 50%; /* Половина высоты side-panel */
     background-color: #f4f5f7;
-    border: 1px solid #ccc;
+    border: 1px solid red;
     flex: 1; /* Занимает оставшееся пространство */
 }
 
