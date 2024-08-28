@@ -23,7 +23,7 @@
 <body>
     <div class="container">
         <div class="top">
-            <h1>Внешний вид</h1>
+            <h1>Gliver</h1>
         </div>
         
         <h2>Размеры</h2>
@@ -39,10 +39,7 @@
             <label for="input-mattress-amount">Введите количество одинаковых матрасов:</label>
             <input type="number" id="input-mattress-amount" min="0" class="form-control" value="1" required pattern="^[0-9]*$">
         </div>
-        <div class="form-group">
-            <label for="input-textile-cost">Введите цену ткани:</label>
-            <input type="number" min="0" id="input-textile-cost" class="form-control" required pattern="^[0-9]*$">
-        </div>
+    
 
         <h2>Крой</h2>
         <div class="card-container">
@@ -114,7 +111,7 @@
         <h2>Декорации</h2>
         <div class="card-container" style="margin-bottom: 20px;">
             <div class="card selectable-card" id="card-uno-stitch">
-                <img src="images/with-stitch.jpg" alt="Кант изображение" class="card-img">
+                <img src="images/back.jpg" alt="Кант изображение" class="card-img">
                 <div class="card-body">
                     <p>Стёжка одинарная</p>
                 </div>
@@ -136,27 +133,42 @@
                 </div>
             </div>
 
-            <div class="card selectable-card" id="card-with-pug">
-                <img src="images/with-pug.jpg" alt="Кант изображение" class="card-img">
+            <div class="card selectable-card" id="card-pik">
+                <img src="images/back.jpg" alt="Пиковка изображение" class="card-img">
                 <div class="card-body">
                     <p>Пиковка</p>
                 </div>
             </div>
         </div>
     
+        <!-- Панель рисования -->
         <div id="side-panel" class="side-panel">
             <div class="sliders-container" id="sliders-container">
-                <label for="length-step-slider">Шаг по длине: <span id="length-step-value">15</span> см</label>
-                <input type="range" id="length-step-slider" min="15" max="35" step="5" value="15">
-                <label for="width-step-slider">Шаг по ширине: <span id="width-step-value">15</span> см</label>
-                <input type="range" id="width-step-slider" min="15" max="35" step="5" value="15">
+                <label for="length-step-slider">Шаг по длине: <span id="length-step-value">30</span> см</label>
+                <input type="range" id="length-step-slider" min="30" max="75" step="5" value="30>
+                <label for="width-step-slider">Шаг по ширине: <span id="width-step-value">30</span> см</label>
+                <input type="range" id="width-step-slider" min="30" max="75" step="5" value="30">
             </div>
             <canvas id="mattress-canvas" width="400" height="200"></canvas>
         </div>
-        
+    
+        <h2>Крепёж</h2>
+        <div class="card-container">
+            <div class="card selectable-card" id="card-velcro">
+                <img src="images/back.jpg" alt="Кант изображение" class="card-img">
+                <div class="card-body">
+                    <p>Липучки</p>
+                </div>
+            </div>
 
-   
-
+            <div class="card selectable-card" id="card-anti-slip">
+                <img src="images/back.jpg" alt="Кант изображение" class="card-img">
+                <div class="card-body">
+                    <p>Антискользин</p>
+                </div>
+            </div>
+        </div>
+        <!-- Выбор выреза -->
         <h2>Форма</h2>
         <div class="form-card-container" style = "margin-bottom: 20px;">
               <!-- Вырез внутри -->
@@ -343,6 +355,6 @@
             <button class = "btn">Расчёт</button>
         </div>
     </div>
-    </div>
+   
 </body>
 </html>
