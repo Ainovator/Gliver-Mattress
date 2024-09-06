@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedCard === cardNoBort) { // Если выбран "Цельный крой"
             disableCard(cardZipperSide, true);
             disableCard(cardNoCant, true);
+            disableCard(cardUnoStitch, false);
+            disableCard(cardDoubleStitch, false);
+            disableCard(cardPik, false);
 
             // Автоматически выбираем "Молния на дне" и "Без канта"
             cardZipperBottom.classList.add('selected');
@@ -49,6 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (selectedCard === cardWithBort) { // Если выбран "Модульный крой"
             disableCard(cardZipperSide, false);
             disableCard(cardNoCant, false);
+            disableCard(cardUnoStitch, true);
+            disableCard(cardDoubleStitch, true);
+            disableCard(cardPik, true);
+
 
             // Снимаем выбор с "Молния на дне" и "Без канта"
             cardZipperBottom.classList.remove('selected');
@@ -179,6 +186,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cardPik.addEventListener('click', function () {
         handleButtonSelection(cardPik);
+        cardUnoStitch.classList.add('selected');
+        drawMattress();
     });
 
     // Обновление значений и перерисовка матраса при изменении шагов

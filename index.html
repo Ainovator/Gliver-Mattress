@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Матрасный калькулятор</title>
+    <link rel="icon" href="images/back.jpg" type="image/x-icon">
+
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="new.css">
@@ -18,6 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="new.js"></script> <!-- Подключаем внешний JS файл -->
+    <script src="main.js"></script> <!-- Подключаем внешний JS файл -->
 </head>
 
 <body>
@@ -52,7 +55,7 @@
             <div class="card selectable-card" id="card-with-bort">
                 <img src="images/only-bort-bottom.jpg" alt="Кант изображение" class="card-img">
                 <div class="card-body">
-                    <p>Модульный крой</p>
+                    <p>Отрезной крой</p>
                 </div>
             </div>
         </div>
@@ -110,6 +113,7 @@
 
         <h2>Декорации</h2>
         <div class="card-container" style="margin-bottom: 20px;">
+
             <div class="card selectable-card" id="card-uno-stitch">
                 <img src="images/back.jpg" alt="Кант изображение" class="card-img">
                 <div class="card-body">
@@ -140,16 +144,20 @@
                 </div>
             </div>
         </div>
-    
+        
         <!-- Панель рисования -->
         <div id="side-panel" class="side-panel">
             <div class="sliders-container" id="sliders-container">
                 <label for="length-step-slider">Шаг по длине: <span id="length-step-value">30</span> см</label>
-                <input type="range" id="length-step-slider" min="30" max="75" step="5" value="30>
+                <input type="range" id="length-step-slider" min="30" max="75" step="5" value="30">
                 <label for="width-step-slider">Шаг по ширине: <span id="width-step-value">30</span> см</label>
                 <input type="range" id="width-step-slider" min="30" max="75" step="5" value="30">
             </div>
             <canvas id="mattress-canvas" width="400" height="200"></canvas>
+            <div class="checkbox-container">
+                <label>Пуговицы с двух сторон</label>
+                <input type = "checkbox">
+            </div>
         </div>
     
         <h2>Крепёж</h2>
@@ -164,7 +172,7 @@
             <div class="card selectable-card" id="card-anti-slip">
                 <img src="images/back.jpg" alt="Кант изображение" class="card-img">
                 <div class="card-body">
-                    <p>Антискользин</p>
+                    <p>Антискользячка</p>
                 </div>
             </div>
         </div>
@@ -350,9 +358,19 @@
             <input type="range" id="input-mattress-bold" class="slider" min="0" max="400" step="50" value="0" disabled>
             <output id="input-mattress-bold-output">0</output>
         </div>
-        
+
+        <div class="form-group">
+            <label for="input-full-work">Введите время всех работ в минутах:</label>
+            <input type="number" id="input-work-time" min="0" value = 95 class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
+        </div>
+        <div class="form-group">
+            <label for="input-textile-cost">Введите стоимость ткани в рублях:</label>
+            <input type="number" id="input-textile-cost" min="0" value = 600 class="form-control" required inputmode="numeric" pattern="^[0-9]*$">
+        </div>
+
+
         <div class = "end-group">
-            <button class = "btn">Расчёт</button>
+            <button id = "calculate-btn" class = "btn">Расчёт</button>
         </div>
     </div>
    

@@ -54,10 +54,10 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: grey;
+    background-color: rgb(31, 31, 31);
     padding: 5px 10px;
     border-radius: 5px;
-    color: wheat;
+    color: white;
     font-size: 14px;
     z-index: 10;
     text-align: center;
@@ -66,7 +66,7 @@ h1 {
 
 .card.disabled {
     pointer-events: none; /* Отключаем возможность клика */
-    opacity: 0.8; /* Уменьшаем непрозрачность */
+    opacity: 0.6; /* Уменьшаем непрозрачность */
 }
 
 .card-img {
@@ -110,6 +110,18 @@ h1 {
     box-sizing: border-box;
     border: 1px solid #ddd;
     flex: 1; /* Занимает оставшееся пространство */
+    
+}
+
+.checkbox-container {
+    height: 50%; /* Половина высоты side-panel */
+    background-color: #f9f9f9;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    color: red;
+    flex: 1; /* Занимает оставшееся пространство */
+    font-size: 24px;
 }
 
 #mattress-canvas {
