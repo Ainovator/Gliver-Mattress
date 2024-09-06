@@ -11,7 +11,7 @@ $response = [];
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        //Массив с цнами на материалы, заменить на данные из админки
+        //Массив с ценами на материалы, заменить на данные из админки
         $Cost_Foam = [
             'LL5020' => 722,
             'HR3535' => 722, 
@@ -25,6 +25,11 @@ try {
         ];
         $textile_width = 1400;
         $scale_up = 20;
+        //Цена холкона заменить на данные из админки
+        $holcon_cost = 128;
+        $zipper_zost = 10;
+        $velcro_cost = 
+
 
         // Данные ручных полей ввода 
         $width = isset($_POST['width']) ? floatval($_POST['width']) : 0;
@@ -225,20 +230,27 @@ try {
             return $Full_Cost_Foam;
         }
 
-        // Расчёт молнии
-        function calculateZipperCost($Input_Mattress_Length, $Input_Mattress_Width) {
-            // Рассчитываем стоимость молнии
-            $zipperCost = ($Input_Mattress_Length / 1000 + $Input_Mattress_Width / 1000) * 10;
-            
-            return $zipperCost;
-        }
-
         // Расчёт работ (заменить на excel)
         function calculateWorkCost($Input_Full_Work, $Input_Mattress_Amount) {
             // Рассчитываем стоимость работы
             $Full_Work_Cost = round((($Input_Full_Work * 9 * $Input_Mattress_Amount) / 1000) * 1000);
             
             return $Full_Work_Cost;
+        }
+
+        // Расчёт молнии
+        function calculateZipperCost($Input_Mattress_Length, $Input_Mattress_Width, $zipper_zost) {
+            // Рассчитываем стоимость молнии
+            $zipperCost = ($Input_Mattress_Length / 1000 + $Input_Mattress_Width / 1000) * $zipper_zost;
+            
+            return $zipperCost;
+        }
+
+        //Расчёт холкона 
+        function calculateHolcon($Input_Mattress_Length, $Input_Mattress_Width, $holcon_cost) {
+            $full_holcon_cost = ($Input_Mattress_Length/1000) * ($Input_Mattress_Width/1000) * $holcon_cost;
+
+            return $full_holcon_cost;
         }
 
 
@@ -253,7 +265,11 @@ try {
         //Стоимость работ (заменить на Excel)
         $Work_Cost = calculateWorkCost($WorkTime, $quantity);
 
+        //Стоимость доп. материалов
+        $full_holcon_cost = calculateHolcon($length, $width, $holcon_cost);
+        $full_zipper_cost = calculateZipperCost($length, $width, $zipper_zost);
 
+        //
         // Проверка наличия ключей в массиве
         if (isset($resultBestFit['rollLength']) && isset($resultBestFit['details'])) {
             $rollSuccess = $resultBestFit['rollLength'];

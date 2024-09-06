@@ -201,140 +201,161 @@ document.addEventListener('DOMContentLoaded', function () {
         drawMattress(); // Перерисовка матраса при изменении шага по ширине
     });
 
-function drawMattress() {
-    const width = parseInt(mattressWidthInput.value, 10) || 0;
-    const length = parseInt(mattressLengthInput.value, 10) || 0;
+     // Функция для рисования матраса
+    function drawMattress() {
+        const width = parseInt(mattressWidthInput.value, 10) || 0;
+        const length = parseInt(mattressLengthInput.value, 10) || 0;
+        const buttonCountWidth = parseInt(widthStepSlider.value, 10) || 0;
+        const buttonCountLength = parseInt(lengthStepSlider.value, 10) || 0;
 
-    // Преобразуем шаги из сантиметров в миллиметры
-    const lengthStep = parseInt(lengthStepSlider.value, 10) * 10 ;
-    const widthStep = parseInt(widthStepSlider.value, 10) * 10 ;
+        // Очищаем canvas перед рисованием
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Очищаем canvas перед рисованием
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Определяем масштаб для отображения на canvas
+        const scale = Math.min(canvas.height / width, canvas.width / length);
+        const scaledWidth = length * scale;
+        const scaledLength = width * scale;
 
-    // Определяем масштаб для отображения на canvas
-    const scale = Math.min(canvas.height / width, canvas.width / length);
+        // Рисуем прямоугольник матраса
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.strokeRect((canvas.width - scaledWidth) / 2, (canvas.height - scaledLength) / 2, scaledWidth, scaledLength);
 
-    // Рисуем прямоугольник матраса с поворотом на 90 градусов
-    const scaledWidth = length * scale;
-    const scaledLength = width * scale;
+        // Рассчитываем расстояния между пуговицами/стёжками
+        const buttonSpacingLength = scaledLength / (buttonCountLength + 1);
+        const buttonSpacingWidth = scaledWidth / (buttonCountWidth + 1);
 
-    // Устанавливаем стили для обводки
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
+        // Проверяем, выбрана ли карточка с одинарной стёжкой
+        if (unoStitchCard.classList.contains('selected')) {
+            // Устанавливаем пунктирную линию для стёжки
+            ctx.setLineDash([5, 5]);
 
-    // Рисуем обводку прямоугольника, без заливки
-    ctx.strokeRect(
-        (canvas.width - scaledWidth) / 2,  // X-координата верхнего левого угла
-        (canvas.height - scaledLength) / 2, // Y-координата верхнего левого угла
-        scaledWidth,  // Ширина прямоугольника (раньше была длина)
-        scaledLength  // Длина прямоугольника (раньше была ширина)
-    );
+            // Рисуем стёжку по ширине
+            for (let i = 1; i <= buttonCountLength; i++) {
+                const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
 
-    // Рассчитываем количество рядов и колонок для стёжки и пуговиц
-    const numButtonsWidth = Math.floor(length / lengthStep);
-   
-    const numButtonsLength = Math.floor(width / widthStep);
-   
+                // Линия от одного края до другого через пуговицы
+                ctx.beginPath();
+                ctx.moveTo((canvas.width - scaledWidth) / 2, y);
+                ctx.lineTo((canvas.width + scaledWidth) / 2, y);
+                ctx.strokeStyle = 'gray';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
 
-    // Рассчитываем расстояние между линиями стёжки
-    const buttonSpacingLength = scaledLength / (numButtonsLength + 1);
-    const buttonSpacingWidth = scaledWidth / (numButtonsWidth + 1);
+            // Рисуем стёжку по длине
+            for (let j = 1; j <= buttonCountWidth; j++) {
+                const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
 
-    // Рисуем пунктирные линии, если выбраны "Одинарная стёжка" или "Двойная стёжка"
-    if (cardUnoStitch.classList.contains('selected')) {
-        drawDashedLines(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, 1);
-    } else if (cardDoubleStitch.classList.contains('selected')) {
-        drawDashedLines(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, 2);
-    }
+                // Линия от одного края до другого через пуговицы
+                ctx.beginPath();
+                ctx.moveTo(x, (canvas.height - scaledLength) / 2);
+                ctx.lineTo(x, (canvas.height + scaledLength) / 2);
+                ctx.strokeStyle = 'gray';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
 
-    // Рисуем пуговицы или крестики в зависимости от выбранной карточки
-    if (cardWithPug.classList.contains('selected')) {
-        drawButtons(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, 'circle');
-    } else if (cardPik.classList.contains('selected')) {
-        drawButtons(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, 'cross');
-    }
-}
-
-// Функция рисования пунктирных линий
-function drawDashedLines(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, linesPerStitch) {
-    const offset = 5; // Смещение для раздвоенных линий
-
-    // Рисуем горизонтальные линии
-    for (let i = 1; i <= numButtonsLength; i++) {
-        const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
-        const startX = (canvas.width - scaledWidth) / 2;
-        const endX = (canvas.width + scaledWidth) / 2;
-
-        for (let j = 0; j < linesPerStitch; j++) {
-            drawDashedLine(startX, y + (j * offset), endX, y + (j * offset));
+            // Возвращаем стандартный стиль линии (не пунктирный)
+            ctx.setLineDash([]);
         }
-    }
 
-    // Рисуем вертикальные линии
-    for (let j = 1; j <= numButtonsWidth; j++) {
-        const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
-        const startY = (canvas.height - scaledLength) / 2;
-        const endY = (canvas.height + scaledLength) / 2;
-
-        for (let i = 0; i < linesPerStitch; i++) {
-            drawDashedLine(x + (i * offset), startY, x + (i * offset), endY);
-        }
-    }
-}
-
-// Функция рисования пуговиц или крестиков
-function drawButtons(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, type) {
-    for (let i = 1; i <= numButtonsLength; i++) {
-        for (let j = 1; j <= numButtonsWidth; j++) {
-            const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
-            const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
-
-            if (type === 'circle') {
-                drawFilledCircle(x, y, 5);
-            } else if (type === 'cross') {
-                drawCross(x, y, 5);
+        // Рисуем пуговицы
+        for (let i = 1; i <= buttonCountLength; i++) {
+            for (let j = 1; j <= buttonCountWidth; j++) {
+                const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
+                const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
+                drawButton(x, y);  // Рисуем пуговицу
             }
         }
     }
-}
 
-// Функция рисования крестиков (пиковка)
-function drawCross(x, y, size) {
-    ctx.beginPath();
-    ctx.moveTo(x - size, y - size);
-    ctx.lineTo(x + size, y + size);
-    ctx.moveTo(x + size, y - size);
-    ctx.lineTo(x - size, y + size);
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-}
+    function drawButton(x, y) {
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    // Функция рисования пунктирных линий
+    function drawDashedLines(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, linesPerStitch) {
+        const offset = 5; // Смещение для раздвоенных линий
 
-// Функция рисования пунктирных линий
-function drawDashedLine(x1, y1, x2, y2) {
-    ctx.beginPath();
-    ctx.setLineDash([5, 5]); // Настраиваем пунктир
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.setLineDash([]); // Сбрасываем пунктирный стиль
-}
+        // Рисуем горизонтальные линии
+        for (let i = 1; i <= numButtonsLength; i++) {
+            const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
+            const startX = (canvas.width - scaledWidth) / 2;
+            const endX = (canvas.width + scaledWidth) / 2;
 
-// Функция рисования закрашенных кружков (пуговиц)
-function drawFilledCircle(x, y, radius) {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 'black';
-    ctx.fill();
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-}
+            for (let j = 0; j < linesPerStitch; j++) {
+                drawDashedLine(startX, y + (j * offset), endX, y + (j * offset));
+            }
+        }
 
-    
+        // Рисуем вертикальные линии
+        for (let j = 1; j <= numButtonsWidth; j++) {
+            const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
+            const startY = (canvas.height - scaledLength) / 2;
+            const endY = (canvas.height + scaledLength) / 2;
+
+            for (let i = 0; i < linesPerStitch; i++) {
+                drawDashedLine(x + (i * offset), startY, x + (i * offset), endY);
+            }
+        }
+    }
+
+    // Функция рисования пуговиц или крестиков
+    function drawButtons(scaledWidth, scaledLength, buttonSpacingLength, buttonSpacingWidth, numButtonsLength, numButtonsWidth, type) {
+        for (let i = 1; i <= numButtonsLength; i++) {
+            for (let j = 1; j <= numButtonsWidth; j++) {
+                const x = (canvas.width - scaledWidth) / 2 + j * buttonSpacingWidth;
+                const y = (canvas.height - scaledLength) / 2 + i * buttonSpacingLength;
+
+                if (type === 'circle') {
+                    drawFilledCircle(x, y, 5);
+                } else if (type === 'cross') {
+                    drawCross(x, y, 5);
+                }
+            }
+        }
+    }
+
+    // Функция рисования крестиков (пиковка)
+    function drawCross(x, y, size) {
+        ctx.beginPath();
+        ctx.moveTo(x - size, y - size);
+        ctx.lineTo(x + size, y + size);
+        ctx.moveTo(x + size, y - size);
+        ctx.lineTo(x - size, y + size);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Функция рисования пунктирных линий
+    function drawDashedLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]); // Настраиваем пунктир
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.setLineDash([]); // Сбрасываем пунктирный стиль
+    }
+
+    // Функция рисования закрашенных кружков (пуговиц)
+    function drawFilledCircle(x, y, radius) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
 
     // Функция, которая снимает выделение со всех карточек и выделяет только выбранную
     function selectFormCard(selectedCard) {
@@ -363,6 +384,7 @@ function drawFilledCircle(x, y, radius) {
         updateMattressBold()
         
     });
+
     // Шаблон обновления слоёв
     function updateLayers(mt_1, bd_1, mt_2, bd_2, mt_3, bd_3) {
         // Первый слой
@@ -383,6 +405,7 @@ function drawFilledCircle(x, y, radius) {
         document.getElementById("bold-third-layer").value = bd_3;
         Bold_Third_Layer = parseInt(document.getElementById('bold-third-layer').value) || 0;
     }
+
     //Обновление толщины матраса
     function updateMattressBold() {
         // Считаем сумму толщин слоёв пены
@@ -394,6 +417,7 @@ function drawFilledCircle(x, y, radius) {
         document.getElementById('input-mattress-bold-output').textContent = Input_Mattress_Bold;
 
     }
+
     //Обновление слоёв от комфортности
     function UpdateLayersSelect() {
         switch (ComfortSelect) {
